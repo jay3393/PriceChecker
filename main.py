@@ -42,7 +42,9 @@ if __name__ == '__main__':
             operation = '<'
         else:
             operation = '>'
+        print('\n'*50)
         while True:
             print("Checking")
             check_price(operation)
+            print('==================================================')
             time.sleep(5)
