@@ -3,17 +3,24 @@ from bs4 import BeautifulSoup
 import time
 import re
 
-url = 'https://www.bestbuy.com/site/razer-kraken-ultimate-wired-thx-spatial-audio-gaming-headset-for-pc-with-rgb-lighting-classic-black/6391902.p?skuId=6391902'
+url1 = 'https://www.bestbuy.com/site/razer-kraken-ultimate-wired-thx-spatial-audio-gaming-headset-for-pc-with-rgb-lighting-classic-black/6391902.p?skuId=6391902'
 
-#url= 'https://www.walmart.com/ip/Razer-Kraken-X-Multi-Platform-Wired-Gaming-Headset-Black/323390578'
+url2= 'https://www.walmart.com/ip/Razer-Kraken-X-Multi-Platform-Wired-Gaming-Headset-Black/323390578'
 
-#url = 'https://www.microcenter.com/product/615492/razer-kraken-x-wired-gaming-headset'
+url3 = 'https://www.microcenter.com/product/615492/razer-kraken-x-wired-gaming-headset'
 
-#url = 'https://www.microcenter.com/product/627723/turtle-beach-stealth-700-gen-2-premium-wireless-gaming-headset'
+url4 = 'https://www.microcenter.com/product/627723/turtle-beach-stealth-700-gen-2-premium-wireless-gaming-headset'
 
 headers = {
     "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36'
 }
+
+def print_product_info(name, price, url):
+    print('==================================================')
+    print(f'Product >> {name}')
+    print(f'Price >> {price}')
+    print(f'Link >> {url}')
+    print('==================================================\n')
 
 def best_buy_check_price(URL):
     '''Checks the product name and price on Best Buy website
@@ -23,8 +30,10 @@ def best_buy_check_price(URL):
 
     product = soup.find('h1', class_ = 'heading-5 v-fw-regular').text
     price = soup.find('div', class_ = 'priceView-hero-price priceView-customer-price').find('span').text
-    print(product)
-    print(price)
+    # print(f'\nProduct: {product}')
+    # print(f'Price: {price}')
+    # print(f'Link: {URL}')
+    print_product_info(product, price, URL)
 
 def walmart_check_price(URL):
     '''Checks the product name and price on Walmart website
@@ -34,8 +43,7 @@ def walmart_check_price(URL):
 
     product = soup.find('h1', class_='prod-ProductTitle prod-productTitle-buyBox font-bold').text
     price = soup.find('span', class_='price display-inline-block arrange-fit price price--stylized').find('span', class_ = 'visuallyhidden').text
-    print(product)
-    print(price)
+    print_product_info(product, price, URL)
 
 def microcenter_check_price(URL):
     '''Checks the product name and price on Microcenter website
@@ -46,8 +54,7 @@ def microcenter_check_price(URL):
     details = soup.find('div', id='details').findAll('span')
     product = details[1].text
     price = soup.find('span', id='pricing').text
-    print(product)
-    print(price)
+    print_product_info(product, price, URL)
 
 def case_switch(arg, URL):
     '''Calls the function for the matching URL'''
@@ -80,4 +87,7 @@ def find_site(URL=None):
 
 
 if __name__ == '__main__':
-    find_site(url)
+    find_site(url1)
+    find_site(url2)
+    find_site(url3)
+    find_site(url4)
