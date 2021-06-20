@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import time
+import re
 
 # URL = 'https://www.bestbuy.com/site/razer-kraken-ultimate-wired-thx-spatial-audio-gaming-headset-for-pc-with-rgb-lighting-classic-black/6391902.p?skuId=6391902'
 
@@ -42,7 +43,21 @@ def microcenter_check_price():
     print(product)
     print(price)
 
-def find_site(URL):
-    return
+def find_site(URL=None):
+    text =  '''
+    https://www.bestbuy.com/site/razer-kraken-ultimate-wired-thx-spatial-audio-gaming-headset-for-pc-with-rgb-lighting-classic-black/6391902.p?skuId=6391902
+    https://www.walmart.com/ip/Razer-Kraken-X-Multi-Platform-Wired-Gaming-Headset-Black/323390578
+    https://www.microcenter.com/product/615492/razer-kraken-x-wired-gaming-headset
+    https://www.microcenter.com/product/627723/turtle-beach-stealth-700-gen-2-premium-wireless-gaming-headset
+    https://www2.hm.com/en_us/productpage.0685816099.html
+    https://www.target.com/c/patio-furniture-garden/all-deals/-/N-5xtorZakkos?type=products
+    https://www.aliexpress.com/item/1005002642578572.html?spm=a2g0o.productlist.0.0.35b47183j62gRT&aem_p4p_detail=202106201502137698753256523000029143816
+    https://www.alibaba.com/product-detail/1-Pc-Body-Fat-Tester-Analyzer_1600128381046.html?spm=a27aq.22883793.4119238120.13.2709bda5UKlcmS&ecology_token=default
+    '''
+    pattern = re.compile(r'\w+\.(com|net)')
+    filter = pattern.finditer(text)
+    for match in filter:
+        print(match)
 
-microcenter_check_price()
+if __name__ == '__main__':
+    find_site(URL)
