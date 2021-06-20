@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import time
 import re
 
-#url = 'https://www.bestbuy.com/site/razer-kraken-ultimate-wired-thx-spatial-audio-gaming-headset-for-pc-with-rgb-lighting-classic-black/6391902.p?skuId=6391902'
+url = 'https://www.bestbuy.com/site/razer-kraken-ultimate-wired-thx-spatial-audio-gaming-headset-for-pc-with-rgb-lighting-classic-black/6391902.p?skuId=6391902'
 
 #url= 'https://www.walmart.com/ip/Razer-Kraken-X-Multi-Platform-Wired-Gaming-Headset-Black/323390578'
 
@@ -16,6 +16,8 @@ headers = {
 }
 
 def best_buy_check_price(URL):
+    '''Checks the product name and price on Best Buy website
+        returns the name and price'''
     r = requests.get(URL, headers=headers)
     soup = BeautifulSoup(r.content, 'lxml')
 
@@ -25,6 +27,8 @@ def best_buy_check_price(URL):
     print(price)
 
 def walmart_check_price(URL):
+    '''Checks the product name and price on Walmart website
+        returns the name and price'''
     r = requests.get(URL, headers=headers)
     soup = BeautifulSoup(r.content, 'lxml')
 
@@ -34,6 +38,8 @@ def walmart_check_price(URL):
     print(price)
 
 def microcenter_check_price(URL):
+    '''Checks the product name and price on Microcenter website
+        returns the name and price'''
     r = requests.get(URL, headers=headers)
     soup = BeautifulSoup(r.content, 'lxml')
 
@@ -44,6 +50,7 @@ def microcenter_check_price(URL):
     print(price)
 
 def case_switch(arg, URL):
+    '''Calls the function for the matching URL'''
     switcher = {
         'bestbuy.com': best_buy_check_price,
         'walmart.com': walmart_check_price,
@@ -53,6 +60,7 @@ def case_switch(arg, URL):
     func(URL)
 
 def find_site(URL=None):
+    '''Use regex to determine the function to call based on the URL'''
     # text =  '''
     # https://www.bestbuy.com/site/razer-kraken-ultimate-wired-thx-spatial-audio-gaming-headset-for-pc-with-rgb-lighting-classic-black/6391902.p?skuId=6391902
     # https://www.walmart.com/ip/Razer-Kraken-X-Multi-Platform-Wired-Gaming-Headset-Black/323390578
