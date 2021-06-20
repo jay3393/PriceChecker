@@ -28,11 +28,13 @@ def best_buy_check_price(URL):
     r = requests.get(URL, headers=headers)
     soup = BeautifulSoup(r.content, 'lxml')
 
-    product = soup.find('h1', class_ = 'heading-5 v-fw-regular').text
-    price = soup.find('div', class_ = 'priceView-hero-price priceView-customer-price').find('span').text
-    # print(f'\nProduct: {product}')
-    # print(f'Price: {price}')
-    # print(f'Link: {URL}')
+    try:
+        product = soup.find('h1', class_='heading-5 v-fw-regular').text
+        price = soup.find('div', class_='priceView-hero-price priceView-customer-price').find('span').text
+    except:
+        print('Failed to retrieve data')
+        return
+
     print_product_info(product, price, URL)
 
 def walmart_check_price(URL):
@@ -41,8 +43,13 @@ def walmart_check_price(URL):
     r = requests.get(URL, headers=headers)
     soup = BeautifulSoup(r.content, 'lxml')
 
-    product = soup.find('h1', class_='prod-ProductTitle prod-productTitle-buyBox font-bold').text
-    price = soup.find('span', class_='price display-inline-block arrange-fit price price--stylized').find('span', class_ = 'visuallyhidden').text
+    try:
+        product = soup.find('h1', class_='prod-ProductTitle prod-productTitle-buyBox font-bold').text
+        price = soup.find('span', class_='price display-inline-block arrange-fit price price--stylized').find('span', class_ = 'visuallyhidden').text
+    except:
+        print('Failed to retrieve data')
+        return
+
     print_product_info(product, price, URL)
 
 def microcenter_check_price(URL):
@@ -51,9 +58,14 @@ def microcenter_check_price(URL):
     r = requests.get(URL, headers=headers)
     soup = BeautifulSoup(r.content, 'lxml')
 
-    details = soup.find('div', id='details').findAll('span')
-    product = details[1].text
-    price = soup.find('span', id='pricing').text
+    try:
+        details = soup.find('div', id='details').findAll('span')
+        product = details[1].text
+        price = soup.find('span', id='pricing').text
+    except:
+        print('Failed to retrieve data')
+        return
+
     print_product_info(product, price, URL)
 
 def case_switch(arg, URL):
