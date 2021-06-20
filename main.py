@@ -87,7 +87,12 @@ def find_site(URL=None):
 
 
 if __name__ == '__main__':
-    find_site(url1)
-    find_site(url2)
-    find_site(url3)
-    find_site(url4)
+    while True:
+        print('Updating prices...')
+        find_site(url1)
+        find_site(url2)
+        find_site(url3)
+        find_site(url4)
+        print('Found results')
+        delay = .1
+        time.sleep(60*delay)
