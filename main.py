@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import re
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 class PriceChecker:
 
@@ -54,7 +56,9 @@ class PriceChecker:
             print(f'Success! {URL}')
             self.completed_tasks += 1
         except:
+            #self.capcha(URL)
             print(f'Failed to retrieve data for {URL}')
+
             return
 
         self.print_product_info(product, price, URL)
@@ -93,6 +97,14 @@ class PriceChecker:
         filter = pattern.search(URL)
         self.case_switch(str(filter.group()), URL)
 
+    def capcha(self, URL):
+        '''Method for manual verification'''
+        driver = webdriver.Chrome(executable_path='D:\chromedriver.exe')
+        driver.get(URL)
+        time.sleep(3)
+        element = driver.find_element_by_class_name('recaptcha-checkbox-border')
+        element.click()
+        time.sleep(2)
 
 if __name__ == '__main__':
     checker = PriceChecker()
@@ -113,5 +125,6 @@ if __name__ == '__main__':
 
         time_taken = time.time() - start_time
         print(f'Found results ({checker.completed_tasks}/{checker.tasks}) in {time_taken} secs')
-        delay = .2
-        time.sleep(60*delay)
+        delay = 1
+        sec_in_min = 60
+        time.sleep(sec_in_min*delay)
