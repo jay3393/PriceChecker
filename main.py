@@ -24,10 +24,10 @@ def check_price(operation):
     price = bs.find('div', class_ = 'YMlKec fxKbKc').text.strip('$')
     if float(price) > float(target):
         if operation == '>':
-            print(f"{ticker.split(':')[0]} is currently greater than target price {price}")
+            print(f"{ticker.split(':')[0]} is currently greater than target price (${target}) at ${price}")
     if float(price) < float(target):
         if operation == '<':
-            print(f"{ticker.split(':')[0]} is currently less than target price {price}")
+            print(f"{ticker.split(':')[0]} is currently less than target price (${target}) ${price}")
     print(price)
 
 
