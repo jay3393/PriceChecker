@@ -28,44 +28,35 @@ class PriceChecker:
 
     details = []
 
-    def print_product_info(self, name, price, url):
-        self.console_log += "==================================================\n"
-        self.console_log += (f'Product >> {name}\n')
-        self.console_log += (f'Price >> {price}\n')
-        self.console_log += (f'Link >> {url}\n')
-        self.console_log += ('==================================================\n')
-
-        # Packs data into JSON and unpack at logdata.py
+    def packJSON(self, name, price, url, store):
+        '''Packs data into JSON and unpack at logdata.py'''
         product = {
             "name": name,
-            "store": url,
+            "store": store,
             "currentPrice": price,
+            "url": url
         }
 
         self.details.append(product)
 
-        '''Modify this to work with json throughout'''
-        # # Not a JSON, it is a dic
-        # for i in range(3):
-        #     product = {
-        #         "name": name,
-        #         "store": url,
-        #         "currentPrice": price,
-        #     }
-        #
-        #     self.details.append(product)
-        #
-        #     # This is a JSON
-        # details_json = json.dumps(self.details)
-        #
-        # nameone = json.loads(details_json)
-        # print(nameone[0]['name'])
-        # print(nameone[0]['store'])
-        # print(nameone[0]['currentPrice'])
+    def generate_console_log(self, name, price, url, store):
+        self.console_log += "==================================================\n"
+        self.console_log += (f'Product >> {name}\n')
+        self.console_log += (f'Store >> {store}\n')
+        self.console_log += (f'Price >> {price}\n')
+        self.console_log += (f'Link >> {url}\n')
+        self.console_log += ('==================================================\n')
+
+        self.packJSON(name, price, url, store)
+
+    def print_console_log(self):
+        print(self.console_log)
+        checker.console_log = ""
 
     def best_buy_check_price(self, URL):
         '''Checks the product name and price on Best Buy website
             returns the name and price'''
+        store = 'BestBuy'
         r = requests.get(URL, headers=self.headers)
         soup = BeautifulSoup(r.content, 'lxml')
 
@@ -78,11 +69,12 @@ class PriceChecker:
             print('Failed to retrieve data')
             return
 
-        self.print_product_info(product, price, URL)
+        self.generate_console_log(product, price, URL, store)
 
     def walmart_check_price(self, URL):
         '''Checks the product name and price on Walmart website
             returns the name and price'''
+        store = 'Walmart'
         r = requests.get(URL, headers=self.headers)
         soup = BeautifulSoup(r.content, 'lxml')
 
@@ -92,16 +84,15 @@ class PriceChecker:
             print(f'Success! {URL}')
             self.completed_tasks += 1
         except:
-            #self.capcha(URL)
             print(f'Failed to retrieve data for {URL}')
-
             return
 
-        self.print_product_info(product, price, URL)
+        self.generate_console_log(product, price, URL, store)
 
     def microcenter_check_price(self, URL):
         '''Checks the product name and price on Microcenter website
             returns the name and price'''
+        store = 'Micro Center'
         r = requests.get(URL, headers=self.headers)
         soup = BeautifulSoup(r.content, 'lxml')
 
@@ -115,8 +106,11 @@ class PriceChecker:
             print('Failed to retrieve data\n')
             return
 
-        self.print_product_info(product, price, URL)
+        self.generate_console_log(product, price, URL, store)
 
+    #   ###############################################
+    #   FIX CASE SWITCH TO HANDLE EXCEPTIONS AND ERRORS
+    #   ###############################################
     def case_switch(self, arg, URL):
         '''Calls the function for the matching URL'''
         switcher = {
@@ -133,6 +127,9 @@ class PriceChecker:
         filter = pattern.search(URL)
         self.case_switch(str(filter.group()), URL)
 
+    #   ################################################
+    #   CAPCHA TO HANDLE BLOCKED WEBSITES (LOW PRIORITY)
+    #   ################################################
     def capcha(self, URL):
         '''Method for manual verification'''
         driver = webdriver.Chrome(executable_path='D:\chromedriver.exe')
@@ -143,8 +140,8 @@ class PriceChecker:
         time.sleep(2)
 
 if __name__ == '__main__':
-    checker = PriceChecker()
-    with open('products.txt', 'r') as f:
+    checker = PriceChecker() # Instantiate the PriceChecker class
+    with open('products.txt', 'r') as f: # Only need to read the file once to get all the websites
         lines = f.read().splitlines()
     f.close()
     checker.tasks = len(lines)
@@ -156,15 +153,14 @@ if __name__ == '__main__':
         for line in lines:
             checker.find_site(line)
 
-        #print(checker.console_log)
-        details_json = json.dumps(checker.details)
-        #print(details_json)
-        checker.console_log = ""
+        checker.print_console_log()
+        details_json = checker.details
 
         time_taken = time.time() - start_time
         print(f'Found results ({checker.completed_tasks}/{checker.tasks}) in {time_taken} secs')
         updateLog = logdata.UpdateLog()
         updateLog.update(details_json)
+
         delay = .1
         sec_in_min = 60
         time.sleep(sec_in_min*delay)
