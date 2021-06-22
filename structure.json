@@ -1,10 +1,19 @@
 {
-  "product": "",
-  "store": "",
-  "currentPrice": "",
-  "previousPrice": "",
-  "priceDrop": "",
-  "history": [
-    {"date": ""}
+  "details": [
+    {
+      "name": "",
+      "store": "",
+      "currentPrice": ""
+    },
+    {
+      "name": "",
+      "store": "",
+      "currentPrice": ""
+    },
+    {
+      "name": "",
+      "store": "",
+      "currentPrice": ""
+    }
   ]
 }

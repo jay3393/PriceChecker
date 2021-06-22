@@ -11,6 +11,7 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import re
+import json
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
@@ -24,6 +25,8 @@ class PriceChecker:
     tasks = 0
     completed_tasks = 0
 
+    details = []
+
     def print_product_info(self, name, price, url):
         # print('==================================================')
         # print(f'Product >> {name}')
@@ -35,6 +38,24 @@ class PriceChecker:
         self.console_log += (f'Price >> {price}\n')
         self.console_log += (f'Link >> {url}\n')
         self.console_log += ('==================================================\n')
+
+        # # Not a JSON, it is a dic
+        # for i in range(3):
+        #     product = {
+        #         "name": name,
+        #         "store": url,
+        #         "currentPrice": price,
+        #     }
+        #
+        #     self.details.append(product)
+        #
+        #     # This is a JSON
+        # details_json = json.dumps(self.details)
+        #
+        # nameone = json.loads(details_json)
+        # print(nameone[0]['name'])
+        # print(nameone[0]['store'])
+        # print(nameone[0]['currentPrice'])
 
     def best_buy_check_price(self, URL):
         '''Checks the product name and price on Best Buy website
