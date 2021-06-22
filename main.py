@@ -1,3 +1,12 @@
+'''
+Pre-processing data retrieval tool
+Read textfile of products from supported sites and determine proper framework function to use for each corresponding product.
+Sends requests for each product and retrieve data of product name, price, and URL.
+Prints to console log and calls the save function to logdata.py
+
+Currently supports BestBuy, Walmart, Microcenter,
+'''
+
 import requests
 from bs4 import BeautifulSoup
 import time
