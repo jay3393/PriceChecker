@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 import time
 import re
 import json
+import logdata
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
@@ -28,17 +29,22 @@ class PriceChecker:
     details = []
 
     def print_product_info(self, name, price, url):
-        # print('==================================================')
-        # print(f'Product >> {name}')
-        # print(f'Price >> {price}')
-        # print(f'Link >> {url}')
-        # print('==================================================\n')
         self.console_log += "==================================================\n"
         self.console_log += (f'Product >> {name}\n')
         self.console_log += (f'Price >> {price}\n')
         self.console_log += (f'Link >> {url}\n')
         self.console_log += ('==================================================\n')
 
+        # Packs data into JSON and unpack at logdata.py
+        product = {
+            "name": name,
+            "store": url,
+            "currentPrice": price,
+        }
+
+        self.details.append(product)
+
+        '''Modify this to work with json throughout'''
         # # Not a JSON, it is a dic
         # for i in range(3):
         #     product = {
@@ -150,11 +156,15 @@ if __name__ == '__main__':
         for line in lines:
             checker.find_site(line)
 
-        print(checker.console_log)
+        #print(checker.console_log)
+        details_json = json.dumps(checker.details)
+        #print(details_json)
         checker.console_log = ""
 
         time_taken = time.time() - start_time
         print(f'Found results ({checker.completed_tasks}/{checker.tasks}) in {time_taken} secs')
-        delay = 1
+        updateLog = logdata.UpdateLog()
+        updateLog.update(details_json)
+        delay = .1
         sec_in_min = 60
         time.sleep(sec_in_min*delay)
