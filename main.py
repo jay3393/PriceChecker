@@ -151,7 +151,7 @@ if __name__ == '__main__':
     checker.tasks = len(lines)
     while True:
         checker.completed_tasks = 0
-        print('Updating prices...')
+        print('Checking prices...')
         start_time = time.time()
 
         for line in lines:
