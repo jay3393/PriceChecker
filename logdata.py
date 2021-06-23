@@ -6,7 +6,9 @@ import json
 import os
 
 class UpdateLog:
-    '''Description'''
+    '''
+    Handles all the file updates including comparing price changes
+    '''
 
     def __init__(self, data):
         self.savefile = 'productHistory.json' # Change file if needed
@@ -18,11 +20,19 @@ class UpdateLog:
             data = json.loads(f)
         return True if key in data else False
 
-    def update(self):
+    def file_exists(self):
+        # Checks if file exists, if not create it with the file name
         if not self.savefile:
             with open(self.savefile, 'w') as f:
                 print('Initializing log...')
             f.close()
+
+    def update(self):
+        '''
+        Updates the savefile using new data and transferring necessary old data to the new data and saving the new data JSON to savefile
+        '''
+        self.file_exists()
+        # If somehow the file exists but is empty, dump current data into file
         if os.stat(self.savefile).st_size == 0:
             print("Empty log found! Dumping data...")
             with open(self.savefile, 'w') as f:
@@ -47,9 +57,27 @@ class UpdateLog:
                 json.dump(self.data, f, sort_keys=False, indent=4)
             f.close()
 
+            # Removes the old file and replaces the temp file with the savefile name
             oldfile = self.savefile
             os.remove(oldfile)
             newfile = 'temp.json'
             os.rename(newfile, oldfile)
 
             print("List updated!")
+
+            self.priceChange()
+
+    def priceChange(self):
+        with open(self.savefile, 'r') as f:
+            data = json.load(f)['products']
+            for product in data:
+                name = product['name']
+                current = product['currentPrice'].strip('$')
+                previous = product['previousPrice'].strip('$')
+                if previous == current:
+                    return
+                if previous < current:
+                    # Change to send message to discord
+                    print(f'*** Price increased from ${previous} -> ${current} ({name})')
+                else:
+                    print(f'*** Price decreased from ${previous} -> ${current} ({name})')

@@ -29,7 +29,9 @@ class PriceChecker:
     data = {}
 
     def packJSON(self, name, price, url, store):
-        '''Packs data into JSON and unpack at logdata.py'''
+        '''
+        Packs data into JSON and unpack at logdata.py
+        '''
         if not self.data:
             self.data['products'] = []
 
@@ -58,8 +60,10 @@ class PriceChecker:
         checker.console_log = ""
 
     def best_buy_check_price(self, URL):
-        '''Checks the product name and price on Best Buy website
-            returns the name and price'''
+        '''
+        Checks the product name and price on Best Buy website
+        returns the name and price
+        '''
         store = 'BestBuy'
         r = requests.get(URL, headers=self.headers)
         soup = BeautifulSoup(r.content, 'lxml')
@@ -76,8 +80,10 @@ class PriceChecker:
         self.generate_console_log(product, price, URL, store)
 
     def walmart_check_price(self, URL):
-        '''Checks the product name and price on Walmart website
-            returns the name and price'''
+        '''
+        Checks the product name and price on Walmart website
+        returns the name and price
+        '''
         store = 'Walmart'
         r = requests.get(URL, headers=self.headers)
         soup = BeautifulSoup(r.content, 'lxml')
@@ -94,8 +100,10 @@ class PriceChecker:
         self.generate_console_log(product, price, URL, store)
 
     def microcenter_check_price(self, URL):
-        '''Checks the product name and price on Microcenter website
-            returns the name and price'''
+        '''
+        Checks the product name and price on Microcenter website
+        returns the name and price
+        '''
         store = 'Micro Center'
         r = requests.get(URL, headers=self.headers)
         soup = BeautifulSoup(r.content, 'lxml')
@@ -116,7 +124,9 @@ class PriceChecker:
     #   FIX CASE SWITCH TO HANDLE EXCEPTIONS AND ERRORS
     #   ###############################################
     def case_switch(self, arg, URL):
-        '''Calls the function for the matching URL'''
+        '''
+        Calls the function for the matching URL
+        '''
         switcher = {
             'bestbuy.com': self.best_buy_check_price,
             'walmart.com': self.walmart_check_price,
@@ -126,7 +136,9 @@ class PriceChecker:
         func(URL)
 
     def find_site(self, URL):
-        '''Use regex to determine the function to call based on the URL'''
+        '''
+        Use regex to determine the function to call based on the URL
+        '''
         pattern = re.compile(r'\w+\.(com|net)')
         filter = pattern.search(URL)
         self.case_switch(str(filter.group()), URL)
@@ -135,7 +147,9 @@ class PriceChecker:
     #   CAPCHA TO HANDLE BLOCKED WEBSITES (LOW PRIORITY)
     #   ################################################
     def capcha(self, URL):
-        '''Method for manual verification'''
+        '''
+        Method for manual verification
+        '''
         driver = webdriver.Chrome(executable_path='D:\chromedriver.exe')
         driver.get(URL)
         time.sleep(3)
