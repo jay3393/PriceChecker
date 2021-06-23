@@ -26,18 +26,22 @@ class PriceChecker:
     tasks = 0
     completed_tasks = 0
 
-    details = []
+    data = {}
 
     def packJSON(self, name, price, url, store):
         '''Packs data into JSON and unpack at logdata.py'''
+        if not self.data:
+            self.data['products'] = []
+
         product = {
             "name": name,
             "store": store,
             "currentPrice": price,
+            "previousPrice": 'N/A',
             "url": url
         }
 
-        self.details.append(product)
+        self.data['products'].append(product)
 
     def generate_console_log(self, name, price, url, store):
         self.console_log += "==================================================\n"
@@ -154,12 +158,13 @@ if __name__ == '__main__':
             checker.find_site(line)
 
         checker.print_console_log()
-        details_json = checker.details
+        details_json = checker.data
+        checker.data = {} # resets data buffer
 
         time_taken = time.time() - start_time
         print(f'Found results ({checker.completed_tasks}/{checker.tasks}) in {time_taken} secs')
-        updateLog = logdata.UpdateLog()
-        updateLog.update(details_json)
+        updateLog = logdata.UpdateLog(details_json)
+        updateLog.update()
 
         delay = .1
         sec_in_min = 60

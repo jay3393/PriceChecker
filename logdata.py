@@ -5,21 +5,34 @@ Takes the data in JSON form from main component and update changed values of pri
 import json
 
 class UpdateLog:
+    '''Description'''
 
-    beginning_of_file = 0
-    savefile = 'productHistory.json'
-    #
-    # def update(self, data):
-    #     data1 = ['1','2','3','4','5']
-    #     data2 = ['one','two','three','four','five']
-    #     with open(self.textfile, 'a') as f:
-    #         csv_writer = csv.writer(f, delimiter=',')
-    #         csv_writer.writerow(data)
+    def __init__(self, data):
+        self.savefile = 'productHistory.json' # Change file if needed
+        self.data = data
 
     # This is to test functionality, change later to save json to csv file
-    def update(self, data):
-        with open(self.savefile, "r") as f:
-            empty = f.read()
+    def key_exists(self, key):
+        with open(self.savefile, 'r') as f:
+            data = json.loads(f)
+        return True if key in data else False
+
+    def update(self):
+        temp = {}
+        with open(self.savefile, 'r') as f:
+            olddata = json.load(f)['products']
+            for product in olddata:
+                name = product['name']
+                previousPrice = product['currentPrice']
+                temp[name] = previousPrice
+
+            for product in self.data['products']:
+                product['previousPrice'] = temp.get(product['name'])
+
+        
+        f.close()
+
+    def tempUpdate(self):
         with open(self.savefile, 'w') as f:
-            json.dump(data, f, indent=4, sort_keys=False)
+            json.dump(self.data, f, indent=4, sort_keys=False)
         f.close()
