@@ -4,6 +4,7 @@ Takes the data in JSON form from main component and update changed values of pri
 '''
 import json
 import os
+import mailservice
 
 class UpdateLog:
     '''
@@ -70,14 +71,26 @@ class UpdateLog:
     def priceChange(self):
         with open(self.savefile, 'r') as f:
             data = json.load(f)['products']
+            packet = []
             for product in data:
                 name = product['name']
-                current = product['currentPrice'].strip('$')
-                previous = product['previousPrice'].strip('$')
-                if previous == current:
-                    return
-                if previous < current:
-                    # Change to send message to discord
-                    print(f'*** Price increased from ${previous} -> ${current} ({name})')
-                else:
-                    print(f'*** Price decreased from ${previous} -> ${current} ({name})')
+                url = product['url']
+                current = product['currentPrice']
+                previous = product['previousPrice']
+                if not previous == 'N/A':
+                    if previous.strip("$") < current.strip("$"):
+                        # Change to send message to discord
+                        print(f'*** Price increased from ${previous} -> ${current} ({name})')
+                    elif previous.strip("$") > current.strip("$"):
+                        print(f'*** Price decreased from ${previous} -> ${current} ({name})')
+                        temp = {}
+                        temp['name'] = name
+                        temp['url'] = url
+                        temp['currentPrice'] = current
+                        temp['previousPrice'] = previous
+                        packet.append(temp)
+            if packet:
+                print('reached')
+                print(packet)
+                mail = mailservice.Email(packet)
+                mail.send_mail()
