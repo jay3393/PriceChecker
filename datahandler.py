@@ -17,7 +17,7 @@ class Package:
 
     def pack(self):
         '''
-        Packs data into JSON and unpack at logdata.py
+        Packs data into JSON formatting and unpack at logdata.py
         '''
 
         product = {
@@ -30,8 +30,10 @@ class Package:
 
         self.data['products'].append(product)
 
-    def unpack(self):
-        data = self.data['products']
+    def unpack(self, filename):
+        print(filename)
+        with open(filename, 'r') as f:
+            data = json.load(f)['products']
         temp = {}
         for item in data:
             name = item['name']
