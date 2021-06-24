@@ -90,7 +90,5 @@ class UpdateLog:
                         temp['previousPrice'] = previous
                         packet.append(temp)
             if packet:
-                print('reached')
-                print(packet)
                 mail = mailservice.Email(packet)
                 mail.send_mail()

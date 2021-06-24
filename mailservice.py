@@ -5,6 +5,11 @@ class Email:
 
     password = os.environ.get('SHEESHBOTPASS')
 
+    to_users = [
+        'ipermagt@gmail.com',
+        'sheeshbotagent@gmail.com'
+    ]
+
     def __init__(self, data):
         '''
         :return
@@ -13,7 +18,7 @@ class Email:
 
     def send_mail(self):
         '''
-        :return:
+        Checks the products that fell and sends the data to users
         '''
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.ehlo()
@@ -37,7 +42,7 @@ class Email:
 
         server.sendmail(
             'sheeshbotagent@gmail.com',
-            ['ipermagt@gmail.com','sheeshbotagent@gmail.com'],
+            self.to_users,
             msg
         )
 
