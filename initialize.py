@@ -17,7 +17,8 @@ def __init__(filename, delay):
         products = []
         for line in lines:
             product = sites.find_site(line)
-            products.append(product)
+            if product != None:
+                products.append(product)
 
         displayer = display.Display()
         packer = datahandler.Package()
