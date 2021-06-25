@@ -43,22 +43,13 @@ class UpdateLog:
         else:
             print("Updating product list...")
             # Retrieves the current price from the old data set and updates the new data set
-            # temp = {}
-            # with open(self.savefile, 'r') as f:
-            #     olddata = json.load(f)['products']
-            #     for product in olddata:
-            #         name = product['name']
-            #         previousPrice = product['currentPrice']
-            #         temp[name] = previousPrice
-
             temp = packObject.unpack(self.savefile)
-            #print(temp)
 
-                # Updates the previous price for the new data set
+            # Updates the previous price for the new data set
             for product in data['products']:
                 item = temp.get(product['name'], None)
                 if item != None:
-                    product['previousPrice'] = item.get(product['currentPrice'], 'N/A')
+                    product['previousPrice'] = item.get('currentPrice', 'N/A')
 
             with open('temp.json', 'w') as f:
                 json.dump(data, f, sort_keys=False, indent=4)

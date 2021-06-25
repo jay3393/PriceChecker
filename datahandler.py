@@ -27,10 +27,9 @@ class Package:
         self.data['products'].append(product)
 
     def unpack(self, filename):
-        print(filename)
         with open(filename, 'r') as f:
             data = json.load(f)['products']
-            print(data)
+
         temp = {}
         for item in data:
             name = item['name']
@@ -38,13 +37,11 @@ class Package:
             current = item['currentPrice']
             previous = item['previousPrice']
             url = item['url']
-            #temp[name] = [store, current, previous, url]
             temp[name] = {
                 "store": store,
                 "currentPrice": current,
                 "previousPrice": previous,
                 "url": url
             }
-            print(temp)
 
         return temp
