@@ -12,6 +12,8 @@ from bs4 import BeautifulSoup
 import re
 import display
 
+import productData
+
 class SiteHandler():
     '''
     Input: URL
@@ -25,7 +27,7 @@ class SiteHandler():
     def __init__(self, tasks):
         self.completed_tasks = 0
         self.total_tasks = tasks
-        self.displayer = display.Display(None, None, None, None)
+        #self.displayer = display.Display()
 
     def best_buy_check_price(self, URL):
         '''
@@ -42,14 +44,11 @@ class SiteHandler():
             print(f'Success! {URL}')
             self.completed_tasks += 1
         except:
-            print('Failed to retrieve data')
-            return
+            print(f'Failed to retrieve data for {URL}')
+            return None
 
-        self.displayer.name = product
-        self.displayer.store = store
-        self.displayer.price = price
-        self.displayer.url = URL
-        self.displayer.generate_console_log()
+        return productData.Product(product, price, URL, store)
+
 
     def walmart_check_price(self, URL):
         '''
@@ -69,11 +68,8 @@ class SiteHandler():
             print(f'Failed to retrieve data for {URL}')
             return
 
-        self.displayer.name = product
-        self.displayer.store = store
-        self.displayer.price = price
-        self.displayer.url = URL
-        self.displayer.generate_console_log()
+        return productData.Product(product, price, URL, store)
+
 
     def microcenter_check_price(self, URL):
         '''
@@ -91,14 +87,10 @@ class SiteHandler():
             print(f'Success! {URL}')
             self.completed_tasks += 1
         except:
-            print('Failed to retrieve data\n')
+            print(f'Failed to retrieve data for {URL}')
             return
 
-        self.displayer.name = product
-        self.displayer.store = store
-        self.displayer.price = price
-        self.displayer.url = URL
-        self.displayer.generate_console_log()
+        return productData.Product(product, price, URL, store)
 
     #   ###############################################
     #   FIX CASE SWITCH TO HANDLE EXCEPTIONS AND ERRORS
@@ -113,7 +105,7 @@ class SiteHandler():
             'microcenter.com': self.microcenter_check_price,
         }
         func = switcher.get(arg, lambda: 'Invalid URL')
-        func(URL)
+        return func(URL)
 
     def find_site(self, URL):
         '''
@@ -121,4 +113,4 @@ class SiteHandler():
         '''
         pattern = re.compile(r'\w+\.(com|net)')
         filter = pattern.search(URL)
-        self.case_switch(str(filter.group()), URL)
+        return self.case_switch(str(filter.group()), URL)
