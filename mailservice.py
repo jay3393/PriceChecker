@@ -36,7 +36,7 @@ class Email:
             current = data['currentPrice']
             previous = data['previousPrice']
             change = float(current.strip('$')) - float(previous.strip('$'))
-            body += name + ' dropped $' + str(round(change,2)) + ' from ' + previous + ' -> ' + current + '\n' + url + '\n'
+            body += name + ' dropped $' + str(abs(round(change,2))) + ' from ' + previous + ' -> ' + current + '\n' + url + '\n'
 
         msg = f"Subject: {subject}\n\n{body}"
 
