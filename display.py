@@ -17,13 +17,6 @@ class Display:
         self.console_log += (f'Link >> {url}\n')
         self.console_log += ('==================================================\n')
 
-        self.packer.name = name
-        self.packer.price = price
-        self.packer.url = url
-        self.packer.store = store
-
-        self.packer.pack()
-
     def print_console_log(self):
         print(self.console_log)
         self.console_log = ""

@@ -2,6 +2,7 @@ import time
 import logdata
 import sitehandler
 import display
+import datahandler
 
 def __init__(filename, delay):
     with open(filename, 'r') as f: # Only need to read the file once to get all the websites
@@ -19,15 +20,16 @@ def __init__(filename, delay):
             products.append(product)
 
         displayer = display.Display()
+        packer = datahandler.Package()
+
         for product in products:
-            print(product.disassemble())
-            displayer.generate_console_log(*product.disassemble())
+            data = product.disassemble()
+            displayer.generate_console_log(*data)
+            packer.pack(*data)
         displayer.print_console_log()
-        #sites.displayer.packer.__print__()
-        logger.data = displayer.packer.data
+
+        logger.data = packer.data
         logger.update()
         print(f'Results found ({sites.completed_tasks}/{sites.total_tasks}) in {time.time() - start_time} sec')
-
-        #print(sites.displayer.packer.unpack())
 
         time.sleep(60*delay)

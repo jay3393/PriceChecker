@@ -67,7 +67,7 @@ class SiteHandler():
         except:
             print(f'Failed to retrieve data for {URL}')
             return
-
+        #print(productData.Product(product, price, URL, store))
         return productData.Product(product, price, URL, store)
 
 

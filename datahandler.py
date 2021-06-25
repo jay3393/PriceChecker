@@ -2,11 +2,7 @@ import json
 
 class Package:
 
-    def __init__(self, name, price, url, store):
-        self.name = name
-        self.price = price
-        self.url = url
-        self.store = store
+    def __init__(self):
         self.data = {
             "products": []
         }
@@ -15,17 +11,17 @@ class Package:
         '''Overrides print function'''
         print(self.data)
 
-    def pack(self):
+    def pack(self, name, price, url, store):
         '''
         Packs data into JSON formatting and unpack at logdata.py
         '''
 
         product = {
-            "name": self.name,
-            "store": self.store,
-            "currentPrice": self.price,
+            "name": name,
+            "store": store,
+            "currentPrice": price,
             "previousPrice": 'N/A',
-            "url": self.url
+            "url": url
         }
 
         self.data['products'].append(product)
