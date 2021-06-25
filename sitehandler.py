@@ -4,14 +4,12 @@ Read textfile of products from supported sites and determine proper framework fu
 Sends requests for each product and retrieve data of product name, price, and URL.
 Prints to console log and calls the save function to logdata.py
 
-Currently supports BestBuy, Walmart, Microcenter,
+Currently supports BestBuy, Walmart, Microcenter (To add more, define the function for that website)
 '''
 
 import requests
 from bs4 import BeautifulSoup
 import re
-import display
-
 import productData
 
 class SiteHandler():
@@ -27,7 +25,6 @@ class SiteHandler():
     def __init__(self, tasks):
         self.completed_tasks = 0
         self.total_tasks = tasks
-        #self.displayer = display.Display()
 
     def best_buy_check_price(self, URL):
         '''
@@ -66,8 +63,8 @@ class SiteHandler():
             self.completed_tasks += 1
         except:
             print(f'Failed to retrieve data for {URL}')
-            return
-        #print(productData.Product(product, price, URL, store))
+            return None
+
         return productData.Product(product, price, URL, store)
 
 
@@ -88,7 +85,7 @@ class SiteHandler():
             self.completed_tasks += 1
         except:
             print(f'Failed to retrieve data for {URL}')
-            return
+            return None
 
         return productData.Product(product, price, URL, store)
 
@@ -98,6 +95,7 @@ class SiteHandler():
     def case_switch(self, arg, URL):
         '''
         Calls the function for the matching URL
+        Add switcher element when adding new site
         '''
         switcher = {
             'bestbuy.com': self.best_buy_check_price,

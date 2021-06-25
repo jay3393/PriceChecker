@@ -5,15 +5,15 @@ Takes the data in JSON form from main component and update changed values of pri
 import json
 import os
 import mailservice
+import datahandler
 
 class UpdateLog:
     '''
     Handles all the file updates including comparing price changes
     '''
 
-    def __init__(self, data):
+    def __init__(self):
         self.savefile = 'productHistory.json' # Change file if needed
-        self.data = data
 
     # This is to test functionality, change later to save json to csv file
     def key_exists(self, key):
@@ -28,34 +28,40 @@ class UpdateLog:
                 print('Initializing log...')
             f.close()
 
-    def update(self):
+    def update(self, packObject):
         '''
         Updates the savefile using new data and transferring necessary old data to the new data and saving the new data JSON to savefile
         '''
         self.file_exists()
+        data = packObject.data
         # If somehow the file exists but is empty, dump current data into file
         if os.stat(self.savefile).st_size == 0:
             print("Empty log found! Dumping data...")
             with open(self.savefile, 'w') as f:
-                json.dump(self.data, f, sort_keys=False, indent=4)
+                json.dump(data, f, sort_keys=False, indent=4)
             f.close()
         else:
             print("Updating product list...")
             # Retrieves the current price from the old data set and updates the new data set
-            temp = {}
-            with open(self.savefile, 'r') as f:
-                olddata = json.load(f)['products']
-                for product in olddata:
-                    name = product['name']
-                    previousPrice = product['currentPrice']
-                    temp[name] = previousPrice
+            # temp = {}
+            # with open(self.savefile, 'r') as f:
+            #     olddata = json.load(f)['products']
+            #     for product in olddata:
+            #         name = product['name']
+            #         previousPrice = product['currentPrice']
+            #         temp[name] = previousPrice
+
+            temp = packObject.unpack(self.savefile)
+            #print(temp)
 
                 # Updates the previous price for the new data set
-                for product in self.data['products']:
-                    product['previousPrice'] = temp.get(product['name'], 'N/A')
+            for product in data['products']:
+                item = temp.get(product['name'], None)
+                if item != None:
+                    product['previousPrice'] = item.get(product['currentPrice'], 'N/A')
 
             with open('temp.json', 'w') as f:
-                json.dump(self.data, f, sort_keys=False, indent=4)
+                json.dump(data, f, sort_keys=False, indent=4)
             f.close()
 
             # Removes the old file and replaces the temp file with the savefile name

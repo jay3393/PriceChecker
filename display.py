@@ -1,13 +1,10 @@
 '''
 Module to display information on console
 '''
-import datahandler
-
 class Display:
 
     def __init__(self):
         self.console_log = ""
-        #self.packer = datahandler.Package(self.name, self.price, self.url, self.store)
 
     def generate_console_log(self, name, price, url, store):
         self.console_log += "==================================================\n"
