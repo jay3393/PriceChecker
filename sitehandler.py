@@ -26,14 +26,25 @@ class SiteHandler():
         self.completed_tasks = 0
         self.total_tasks = tasks
 
+    def get_request(self, URL):
+        try:
+            r = requests.get(URL, headers=self.headers, timeout=(1,2))
+            soup = BeautifulSoup(r.content, 'lxml')
+            return soup
+        except TimeoutError:
+            print(f"Timed Out: {URL}")
+            return soup
+        except:
+            print(f'Failed to retrieve data for {URL}')
+            return soup
+
     def best_buy_check_price(self, URL):
         '''
         Checks the product name and price on Best Buy website
         returns the name and price
         '''
         store = 'BestBuy'
-        r = requests.get(URL, headers=self.headers)
-        soup = BeautifulSoup(r.content, 'lxml')
+        soup = self.get_request(URL)
 
         try:
             product = soup.find('h1', class_='heading-5 v-fw-regular').text
@@ -53,8 +64,9 @@ class SiteHandler():
         returns the name and price
         '''
         store = 'Walmart'
-        r = requests.get(URL, headers=self.headers)
-        soup = BeautifulSoup(r.content, 'lxml')
+        soup = self.get_request(URL)
+        # r = requests.get(URL, headers=self.headers)
+        # soup = BeautifulSoup(r.content, 'lxml')
 
         try:
             product = soup.find('h1', class_='prod-ProductTitle prod-productTitle-buyBox font-bold').text
@@ -74,8 +86,9 @@ class SiteHandler():
         returns the name and price
         '''
         store = 'Micro Center'
-        r = requests.get(URL, headers=self.headers)
-        soup = BeautifulSoup(r.content, 'lxml')
+        soup = self.get_request(URL)
+        # r = requests.get(URL, headers=self.headers)
+        # soup = BeautifulSoup(r.content, 'lxml')
 
         try:
             details = soup.find('div', id='details').findAll('span')
