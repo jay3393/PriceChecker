@@ -35,8 +35,9 @@ class Email:
             url = data['url']
             current = data['currentPrice']
             previous = data['previousPrice']
-            change = float(current.strip('$')) - float(previous.strip('$'))
-            body += name + ' dropped $' + str(abs(round(change,2))) + ' from ' + previous + ' -> ' + current + '\n' + url + '\n'
+            change = abs(float(current.strip('$')) - float(previous.strip('$')))
+            change = "{:.2f}".format(change)
+            body += name + ' dropped $' + change + ' from ' + previous + ' -> ' + current + '\n' + url + '\n'
 
         msg = f"Subject: {subject}\n\n{body}"
 
@@ -45,5 +46,7 @@ class Email:
             self.to_users,
             msg
         )
+
+        print("===============Email sent!===============")
 
         server.quit()
