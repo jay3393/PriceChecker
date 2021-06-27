@@ -127,6 +127,3 @@ class SiteHandler():
         pattern = re.compile(r'\w+\.(com|net)')
         filter = pattern.search(URL)
         return self.case_switch(str(filter.group()), URL)
-
-site = SiteHandler(1)
-site.find_site('https://www.facebook.com/')
