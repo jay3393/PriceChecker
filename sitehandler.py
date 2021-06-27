@@ -105,6 +105,7 @@ class SiteHandler():
     #   ###############################################
     #   FIX CASE SWITCH TO HANDLE EXCEPTIONS AND ERRORS
     #   ###############################################
+
     def case_switch(self, arg, URL):
         '''
         Calls the function for the matching URL
@@ -115,8 +116,9 @@ class SiteHandler():
             'walmart.com': self.walmart_check_price,
             'microcenter.com': self.microcenter_check_price,
         }
-        func = switcher.get(arg, lambda: 'Invalid URL')
-        return func(URL)
+        func = switcher.get(arg, 'Invalid URL')
+        if func != 'Invalid URL':
+            return func(URL)
 
     def find_site(self, URL):
         '''
@@ -125,3 +127,6 @@ class SiteHandler():
         pattern = re.compile(r'\w+\.(com|net)')
         filter = pattern.search(URL)
         return self.case_switch(str(filter.group()), URL)
+
+site = SiteHandler(1)
+site.find_site('https://www.facebook.com/')
