@@ -45,12 +45,17 @@ class DiscordBot(discord.Client):
         url = content[1]
         valid_url = validators.url(url)
         if valid_url:
-            if self.check_url(url):
-                with open('products.txt', 'a') as f:
-                    writer = f.write(url + '\n')
-                f.close()
-                await message.channel.send(f"Now tracking {url}")
-                await message.delete()
+            if await self.check_url(url):
+                if not await self.contains_url(url):
+                    with open('products.txt', 'a') as f:
+                        writer = f.write(url + '\n')
+                    f.close()
+                    await message.channel.send(f"Now tracking {url}")
+                    await message.delete()
+                else:
+                    await message.channel.send(f"URL is already being tracked")
+            else:
+                await message.channel.send(f"Website is currently not supported")
         else:
             await message.channel.send(f"Invalid URL. Use ?track URL")
         return
@@ -103,13 +108,23 @@ class DiscordBot(discord.Client):
         embed.add_field(name='?untrack', value='Removes the product from tracking list', inline=False)
         await message.channel.send(embed=embed)
 
-    def check_url(self, URL):
+    async def contains_url(self, URL):
+        retval = False
+        with open('products.txt', 'r') as f:
+            lines = f.readlines()
+            for line in lines:
+                if line.strip() == URL:
+                    retval = True
+        return retval
+
+    async def check_url(self, URL):
         '''
         Calls the function for the matching URL
         Add switcher element when adding new site
         '''
         pattern = re.compile(r'\w+\.(com|net)')
         filter = pattern.search(URL)
+        print(filter)
         arg = str(filter.group())
         switcher = {
             'bestbuy.com': 'Supported',
@@ -118,8 +133,10 @@ class DiscordBot(discord.Client):
         }
         func = switcher.get(arg, lambda: 'Website not supported')
         if func == 'Supported':
+            print("supported")
             return True
         else:
+            print("unsupported")
             return False
 
     async def case_switch(self, content, message):

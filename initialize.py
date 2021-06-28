@@ -3,8 +3,6 @@ import logdata
 import sitehandler
 import display
 import datahandler
-import discordbot
-import discord
 
 def __init__(filename, delay):
 
