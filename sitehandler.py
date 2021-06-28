@@ -115,8 +115,9 @@ class SiteHandler():
             'walmart.com': self.walmart_check_price,
             'microcenter.com': self.microcenter_check_price,
         }
-        func = switcher.get(arg, lambda: 'Invalid URL')
-        return func(URL)
+        func = switcher.get(arg, lambda: 'Website not supported')
+        if func != 'Website not supported':
+            return func(URL)
 
     def find_site(self, URL):
         '''
