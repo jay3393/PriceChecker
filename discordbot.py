@@ -5,6 +5,8 @@ import display
 import json
 import requests
 import validators
+import sitehandler
+import re
 
 token = os.environ.get('SLOWAFBOTTOKEN')
 
@@ -13,6 +15,7 @@ headers = {
 }
 
 class DiscordBot(discord.Client):
+
     async def on_ready(self):
         print('Logged on as {0}!'.format(self.user))
 
@@ -42,11 +45,12 @@ class DiscordBot(discord.Client):
         url = content[1]
         valid_url = validators.url(url)
         if valid_url:
-            with open('products.txt', 'a') as f:
-                writer = f.write(url + '\n')
-            f.close()
-            await message.channel.send(f"Now tracking {url}")
-            await message.delete()
+            if self.check_url(url):
+                with open('products.txt', 'a') as f:
+                    writer = f.write(url + '\n')
+                f.close()
+                await message.channel.send(f"Now tracking {url}")
+                await message.delete()
         else:
             await message.channel.send(f"Invalid URL. Use ?track URL")
         return
@@ -91,7 +95,32 @@ class DiscordBot(discord.Client):
         return
 
     async def help(self, message):
-        await message.channel.send("Change to embedded")
+        embed = discord.Embed(title='Commands', color=0xebc252)
+        embed.add_field(name='?helpme',value='Shows the available commands',inline=False)
+        embed.add_field(name='?update', value='Lists the prices of each product tracked', inline=False)
+        embed.add_field(name='?products', value='Lists the products being tracked', inline=False)
+        embed.add_field(name='?track', value='Adds the product to tracking list', inline=False)
+        embed.add_field(name='?untrack', value='Removes the product from tracking list', inline=False)
+        await message.channel.send(embed=embed)
+
+    def check_url(self, URL):
+        '''
+        Calls the function for the matching URL
+        Add switcher element when adding new site
+        '''
+        pattern = re.compile(r'\w+\.(com|net)')
+        filter = pattern.search(URL)
+        arg = str(filter.group())
+        switcher = {
+            'bestbuy.com': 'Supported',
+            'walmart.com': 'Supported',
+            'microcenter.com': 'Supported',
+        }
+        func = switcher.get(arg, lambda: 'Website not supported')
+        if func == 'Supported':
+            return True
+        else:
+            return False
 
     async def case_switch(self, content, message):
         task = content[0]

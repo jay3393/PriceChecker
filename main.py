@@ -1,7 +1,7 @@
 import initialize
 
 textfile = 'products.txt'
-delay = 60 # delay in minutes
+delay = .1 # delay in minutes
 jsonfile = 'productHistory.json'
 
 if __name__ == '__main__':
