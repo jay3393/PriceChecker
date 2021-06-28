@@ -52,11 +52,11 @@ class DiscordBot(discord.Client):
         return
 
     async def remove_product(self, message):
-        print("remove product")
         content = message.content.split()
         if len(content) != 2:
             return
         url = content[1]
+        print(f"Untracking product: {url}")
         valid_url = validators.url(url)
         if valid_url:
             with open('products.txt', 'r') as f:
@@ -66,7 +66,8 @@ class DiscordBot(discord.Client):
                 for line in lines:
                     print(line)
                     if line.strip() != url:
-                        w.writelines(line.strip())
+                        w.writelines(line.strip()+'\n')
+
             await message.channel.send(f"Stopped tracking {url}")
             await message.delete()
         else:
