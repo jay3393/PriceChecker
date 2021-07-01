@@ -7,6 +7,9 @@ import requests
 import validators
 import sitehandler
 import re
+import threading
+import asyncio
+import time
 
 token = os.environ.get('SLOWAFBOTTOKEN')
 
@@ -152,8 +155,25 @@ class DiscordBot(discord.Client):
         if func != 'Invalid function':
             return await func(message)
 
+    async def price_change(self,packet):
+        channel = client.get_channel(403812490112139265)
+        body = ''
+        embed = discord.Embed()
+        for data in packet:
+            name = data['name']
+            url = data['url']
+            current = data['currentPrice']
+            previous = data['previousPrice']
+            change = abs(float(current.strip('$')) - float(previous.strip('$')))
+            change = "{:.2f}".format(change)
+            body += previous + ' -> ' + current + ' ($' + change + ')' + '\n' + url + '\n'
+            embed.add_field(name=name, value=body, inline=False)
+
+        await channel.send(embed=embed)
+
     async def on_message(self, message):
         # Ignore if the message was from the bot itself
+
         if message.author == client.user:
             return
 
@@ -167,5 +187,16 @@ class DiscordBot(discord.Client):
 
         await self.case_switch(content, message)
 
+
 client = DiscordBot()
-client.run(token)
+def run_client():
+    asyncio.run(client.run(token))
+
+def something(packet):
+    print('started something')
+    loop = asyncio.get_event_loop()
+    asyncio._set_running_loop(loop)
+    task = asyncio.create_task(client.price_change(packet))
+
+x = threading.Thread(target=run_client)
+x.start()

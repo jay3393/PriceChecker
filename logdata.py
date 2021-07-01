@@ -6,6 +6,8 @@ import json
 import os
 import mailservice
 import datahandler
+import discordbot
+import threading
 
 class UpdateLog:
     '''
@@ -89,3 +91,4 @@ class UpdateLog:
             if packet:
                 mail = mailservice.Email(packet)
                 mail.send_mail()
+                discordbot.something(packet)

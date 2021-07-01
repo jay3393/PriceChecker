@@ -36,7 +36,7 @@ class SiteHandler():
             return soup
         except:
             print(f'Failed to retrieve data for {URL}')
-            return soup
+            return None
 
     def best_buy_check_price(self, URL):
         '''
@@ -45,6 +45,8 @@ class SiteHandler():
         '''
         store = 'BestBuy'
         soup = self.get_request(URL)
+        if soup == None:
+            return
 
         try:
             product = soup.find('h1', class_='heading-5 v-fw-regular').text
@@ -65,6 +67,8 @@ class SiteHandler():
         '''
         store = 'Walmart'
         soup = self.get_request(URL)
+        if soup == None:
+            return
         # r = requests.get(URL, headers=self.headers)
         # soup = BeautifulSoup(r.content, 'lxml')
 
@@ -87,6 +91,8 @@ class SiteHandler():
         '''
         store = 'Micro Center'
         soup = self.get_request(URL)
+        if soup == None:
+            return
         # r = requests.get(URL, headers=self.headers)
         # soup = BeautifulSoup(r.content, 'lxml')
 
