@@ -156,7 +156,7 @@ class DiscordBot(discord.Client):
             return await func(message)
 
     async def price_change(self,packet):
-        channel = client.get_channel(403812490112139265)
+        channel = client.get_channel(701670946515189831)
         body = ''
         embed = discord.Embed()
         for data in packet:
@@ -168,6 +168,7 @@ class DiscordBot(discord.Client):
             change = "{:.2f}".format(change)
             body += previous + ' -> ' + current + ' ($' + change + ')' + '\n' + url + '\n'
             embed.add_field(name=name, value=body, inline=False)
+            body = ''
 
         await channel.send(embed=embed)
 
