@@ -8,6 +8,7 @@ import mailservice
 import datahandler
 import discordbot
 import threading
+import os.path
 
 class UpdateLog:
     '''
@@ -25,7 +26,7 @@ class UpdateLog:
 
     def file_exists(self):
         # Checks if file exists, if not create it with the file name
-        if not self.savefile:
+        if not os.path.exists(self.savefile):
             with open(self.savefile, 'w') as f:
                 print('Initializing log...')
             f.close()
