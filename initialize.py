@@ -3,6 +3,7 @@ import logdata
 import sitehandler
 import display
 import datahandler
+import os.path
 
 def __init__(filename, delay):
 
@@ -10,6 +11,9 @@ def __init__(filename, delay):
 
     while True:
         # Read the product URLs to be scrapped
+        if not os.path.exists(filename):
+            with open(filename, 'w') as f:
+                f.close()
         with open(filename, 'r') as f:
             lines = f.read().splitlines()
         f.close()
