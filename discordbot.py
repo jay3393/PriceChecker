@@ -199,5 +199,7 @@ def something(packet):
     asyncio._set_running_loop(loop)
     task = asyncio.create_task(client.price_change(packet))
 
-x = threading.Thread(target=run_client)
-x.start()
+# run_client()
+
+# x = threading.Thread(target=run_client)
+# x.start()
